@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preversion": "npm run clean && npm run format && npm test",
-    "version": "npm run build && git add .",
+    "version": "git add .",
     "postversion": "git push && git push --tags",
     "patch": "npm version patch -m \"[PATCH] version (%s)\"",
     "minor": "npm version minor -m \"[MINOR] version (%s)\"",
