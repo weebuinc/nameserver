@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./lib",
+    "sourceMap": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es5",
+    "lib": ["es2017", "dom"],
+    "baseUrl": "./src"
+  },
+  "include": ["src/**/*.ts", "scripts/*.ts", "**/*.spec.ts", "types/*.d.ts"],
+  "ts-node": {
+    "esm": false,
+    "transpileOnly": true,
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "CommonJS"
+    },
+    "require": ["ts-node/register", "tsconfig-paths/register", "dotenv/config"]
+  }
+}
