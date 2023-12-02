@@ -1,1 +1,1 @@
-export * from './createDnsService';
+export * from './createNameService';
