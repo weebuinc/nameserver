@@ -12,7 +12,13 @@ interface Dependencies {
   port?: number;
 }
 export function createUdpServer(deps: Dependencies) {
-  const { ipAddress = iface.getIp('v4'), port = 53, onBind = () => {}, onQuery, onError } = deps;
+  const {
+    ipAddress = iface.getIp('v4'),
+    port = iface.getPort(),
+    onBind = () => {},
+    onQuery,
+    onError
+  } = deps;
   const socket = createSocket('udp4');
 
   socket.on('error', onError);

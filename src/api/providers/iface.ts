@@ -10,7 +10,10 @@ export const iface = {
     }, new Array<NetworkInterface>());
   },
   getIp(version: 'v4' | 'v6' = 'v4') {
-    const { NETWORK_IFACE } = process.env;
+    const { BIND_HOST, NETWORK_IFACE } = process.env;
+    if (BIND_HOST) {
+      return BIND_HOST;
+    }
     const interfaces = networkInterfaces();
     const information = interfaces[NETWORK_IFACE];
     const family = `IP${version}`;
@@ -21,5 +24,8 @@ export const iface = {
         }
       }
     }
+  },
+  getPort() {
+    return parseInt(process.env.BIND_PORT || '53');
   }
 };
