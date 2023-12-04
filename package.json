@@ -16,7 +16,8 @@
     "script:list-database-table": "ts-node scripts/list-database-table.ts",
     "script:list-network-interfaces": "ts-node scripts/list-network-interfaces.ts",
     "script:resolve-domain": "ts-node scripts/resolve-domain.ts",
-    "script:start-server": "ts-node scripts/start-server.ts"
+    "script:start-http-server": "ts-node scripts/start-http-server.ts",
+    "script:start-udp-server": "ts-node scripts/start-udp-server.ts"
   },
   "author": "Joseph Eniojukan <joseph@weebu.ca>",
   "license": "ISC",

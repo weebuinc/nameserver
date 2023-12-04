@@ -27,5 +27,8 @@ export const iface = {
   },
   getPort() {
     return parseInt(process.env.BIND_PORT || '53');
+  },
+  getHttpPort(defaultPort: number) {
+    return parseInt(process.env.BIND_PORT || defaultPort.toString());
   }
 };

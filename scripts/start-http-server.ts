@@ -1,12 +1,17 @@
 import { inspect } from 'util';
+import { Answer } from 'dns-packet';
 import { wait, withCatch } from '@weebuinc/web-kit';
 
-import { getBasename } from 'api/utils';
 import { serverRepo } from 'api/repos';
-import { createNameService, createUdpClient, createUdpServer } from 'api/services';
-import { Answer } from 'dns-packet';
+import { createNameService, createUdpClient, createHttpServer } from 'api/services';
 
-const key = getBasename(__filename);
+function getSsl() {
+  const { SSL_CA, SSL_CERT, SSL_KEY, SSL_ENABLED } = process.env;
+  const enabled = /^true$/i.test(SSL_ENABLED);
+  if (enabled) {
+    return { ca: SSL_CA, cert: SSL_CERT, key: SSL_KEY };
+  }
+}
 
 async function run() {
   let active = true;
@@ -14,16 +19,16 @@ async function run() {
     active = false;
   });
 
+  const ssl = getSsl();
   const ns = createNameService();
   const clients = serverRepo.list().map(s => createUdpClient({ address: s.address }));
-  const server = createUdpServer({
-    onBind({ address, port, family }) {
-      console.info(`listening on ${family} ${address}:${port}`);
+
+  const server = createHttpServer({
+    ssl,
+    onBind(info) {
+      console.info(`listening on ${info.family} ${info.address}:${info.port}`);
     },
-    onError(error) {
-      console.error(error);
-    },
-    async onQuery(question, info) {
+    onQuery: async (question, info) => {
       const ans = ns.query(question.name);
       if (ans) {
         console.log(
