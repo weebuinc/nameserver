@@ -1,4 +1,4 @@
-import { decode, encode, Packet, Question } from 'dns-packet';
+import { decode, encode, Question } from 'dns-packet';
 
 export function getAnswer(buffer: Buffer) {
   const packet = decode(buffer);

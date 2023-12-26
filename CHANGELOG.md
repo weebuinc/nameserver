@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.<br/>
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).<br/><br/>
 
+## [1.4.0](https://github.com/weebuinc/nameserver/tree/v1.4.0) [FEATURE] Added Support for Client DNS-over-HTTPS (DoH) (2023-12-26)
+
+- added the `Endpoint` type to signify the DoH endpoints (ex: `cloudflare`, `google`).
+- added the `endpoints` constant that has mappings of DoH endpoints and urls.
+- added the `getAnswer()` function that converts a `Buffer` to a `dns-packet` `Answer` object.
+- added the `getEncodedPacket()` function that converts a `dns-packet` `Question` object to a `Buffer`.
+- added the `createDohClient()` function that creates a DoH client to be used for queries.
+- added version `29.7.0` of the `jest` module.
+- added version `16.0.0` of the `jest-juni` module.
+- added version `29.1.1` for the `ts-jest` module.
+- added version `29.5.11` for the `@types/jest` module.
+
+<br/>
+
 ## [1.3.0](https://github.com/weebuinc/nameserver/tree/v1.3.0) [FEATURE] Added Support for DNS-over-HTTPS (DoH) (2023-12-04)
 
 - added the `createHttpServer()` function that creates a service with logic that handles DoH.

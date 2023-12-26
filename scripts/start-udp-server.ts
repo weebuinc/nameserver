@@ -2,7 +2,6 @@ import { inspect } from 'util';
 import { Answer } from 'dns-packet';
 import { wait, withCatch } from '@weebuinc/web-kit';
 
-import { getBasename } from 'api/utils';
 import { serverRepo } from 'api/repos';
 import { createNameService, createUdpClient, createUdpServer } from 'api/services';
 import { Endpoint as E, createDohClient } from 'api/services/doh';
