@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="6" failures="0" errors="0" time="2.424">
+  <testsuite name="src/api/services/doh/createDohClient.spec.ts" errors="0" failures="0" skipped="0" timestamp="2023-12-26T19:40:43" time="2.348" tests="6">
+    <testcase classname="createDohClient unit tests" name="query amazon.com with cloudflare" time="0.452">
+    </testcase>
+    <testcase classname="createDohClient unit tests" name="query apple.com with cloudflare" time="0.058">
+    </testcase>
+    <testcase classname="createDohClient unit tests" name="query yahoo.com with cloudflare" time="0.052">
+    </testcase>
+    <testcase classname="createDohClient unit tests" name="query amazon.com with google" time="0.116">
+    </testcase>
+    <testcase classname="createDohClient unit tests" name="query apple.com with google" time="0.048">
+    </testcase>
+    <testcase classname="createDohClient unit tests" name="query yahoo.com with google" time="0.051">
+    </testcase>
+  </testsuite>
+</testsuites>
