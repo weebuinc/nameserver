@@ -19,6 +19,7 @@ interface Dependencies {
   timeout?: number;
 }
 export function createUdpClient(deps: Dependencies) {
+  const { address } = deps;
   const state = { id: 1 };
   const resolutions = new Map<number, Resolution>();
   const socket = createSocket('udp4');
@@ -47,7 +48,7 @@ export function createUdpClient(deps: Dependencies) {
   }
 
   function query(name: string, type: RecordType = 'A', cls: RecordClass = 'IN', id = getId()) {
-    const { address, timeout = 1000 } = deps;
+    const { timeout = 1000 } = deps;
     return new Promise<Answer>((resolve, reject) => {
       resolutions.set(id, {
         resolve,
@@ -68,5 +69,5 @@ export function createUdpClient(deps: Dependencies) {
     });
   }
 
-  return { close, query };
+  return { address, close, query };
 }

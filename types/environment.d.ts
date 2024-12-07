@@ -10,6 +10,8 @@ declare module 'process' {
         SSL_CA: string;
         SSL_CERT: string;
         SSL_KEY: string;
+        SSL_PROTOCOL: string;
+        DOH_ENDPOINTS: string;
       }
     }
   }
