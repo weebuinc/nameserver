@@ -31,13 +31,16 @@ async function run() {
     active = false;
   });
 
+  const queryTimeout = parseInt(process.env.QUERY_TIMEOUT || '1000', 10);
   const ssl = getSsl();
   const ns = createNameService();
 
   console.info('doh endpoints:', ...endpoints);
 
   const dohClients = endpoints.map(endpoint => createDohClient({ endpoint }));
-  const udpClients = serverRepo.list().map(s => createUdpClient({ address: s.address }));
+  const udpClients = serverRepo
+    .list()
+    .map(s => createUdpClient({ address: s.address, timeout: queryTimeout }));
 
   const server = createHttpServer({
     ssl,

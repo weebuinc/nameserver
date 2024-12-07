@@ -10,14 +10,18 @@ import {
   RecordClass
 } from 'dns-packet';
 
-import { isIP } from 'validator';
-
+interface Recursion {
+  id: number;
+  answer: BaseAnswer<'A' | 'CNAME', string>;
+  count: number;
+  timeout: NodeJS.Timeout;
+  resolve: (ans: Answer) => any;
+}
 interface Resolution {
   resolve: (ans: Answer) => any;
   reject: (err: Error) => any;
   timeout: NodeJS.Timeout;
-  recursions: number;
-  originalId: number;
+  recursion: Recursion;
 }
 interface Dependencies {
   address: string;
@@ -36,24 +40,45 @@ export function createUdpClient(deps: Dependencies) {
       const answer = packet.answers[0] as BaseAnswer<'A' | 'CNAME', string>;
       const res = resolutions.get(packet.id);
 
-      if (answer?.type === 'CNAME' && res.recursions < maxRecursionDepth) {
-        const originalId = res.originalId || packet.id;
-        if (res.originalId) {
-          // OCCURS when this is a recursive query
+      if (
+        answer?.type === 'CNAME' &&
+        (res.recursion ? res.recursion.count < maxRecursionDepth : true)
+      ) {
+        // NOTE: add a recursion if missing, signifying this is the first recurssion
+        const recursion: Recursion =
+          res.recursion ||
+          ({
+            id: packet.id,
+            answer,
+            count: 0,
+            timeout: res.timeout,
+            resolve: res.resolve
+          } satisfies Recursion);
+        if (res.recursion) {
+          // NOTE: occurs when this is a recursive query
           clearTimeout(res.timeout);
           resolutions.delete(packet.id);
           res.resolve(answer);
         }
-        query(answer.data, 'A', 'IN', getId(), res.recursions + 1, originalId);
+        recursion.count++;
+        query(answer.data, 'A', 'IN', getId(), recursion);
       } else {
         clearTimeout(res.timeout);
         resolutions.delete(packet.id);
         res.resolve(answer);
-        if (res.originalId && resolutions.has(res.originalId)) {
-          const orig = resolutions.get(res.originalId);
-          clearTimeout(orig.timeout);
-          resolutions.delete(res.originalId);
-          orig.resolve(answer);
+        const { recursion } = res;
+        if (recursion) {
+          clearTimeout(recursion.id);
+
+          // NOTE: ensure that original answer type is an A record
+          recursion.answer.type = 'A';
+          // NOTE: replace the original data (which is a domain string) with the latest answer which is a resolved IP address
+          recursion.answer.data = answer.data;
+
+          resolutions.delete(recursion.id);
+
+          // NOTE: return the modified original answer to the async call
+          recursion.resolve(recursion.answer);
         }
       }
     }
@@ -78,16 +103,14 @@ export function createUdpClient(deps: Dependencies) {
     type: RecordType = 'A',
     cls: RecordClass = 'IN',
     id = getId(),
-    recursions = 0,
-    originalId = null
+    recursion = null
   ) {
     const { timeout = 1000 } = deps;
     return new Promise<Answer>((resolve, reject) => {
       resolutions.set(id, {
         resolve,
         reject,
-        recursions,
-        originalId,
+        recursion,
         timeout: setTimeout(() => {
           resolutions.delete(id);
           reject(new Error('dns resolution query timedout!'));
