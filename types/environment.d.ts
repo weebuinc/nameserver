@@ -12,6 +12,7 @@ declare module 'process' {
         SSL_KEY: string;
         SSL_PROTOCOL: string;
         DOH_ENDPOINTS: string;
+        MAX_RECURSION_DEPTH: string;
       }
     }
   }
