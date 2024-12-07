@@ -36,7 +36,7 @@ export function createUdpClient(deps: Dependencies) {
       const answer = packet.answers[0] as BaseAnswer<'A' | 'CNAME', string>;
       const res = resolutions.get(packet.id);
 
-      if (answer.type === 'CNAME' && res.recursions < maxRecursionDepth) {
+      if (answer?.type === 'CNAME' && res.recursions < maxRecursionDepth) {
         const originalId = res.originalId || packet.id;
         if (res.originalId) {
           // OCCURS when this is a recursive query
