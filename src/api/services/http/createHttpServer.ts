@@ -11,6 +11,7 @@ interface SslParams {
   ca?: string;
   cert: string;
   key: string;
+  secureProtocol?: 'TLSv1_1_method' | 'TLSv1_2_method' | 'TLSv1_3_method' | string;
 }
 interface Dependencies {
   host?: string;

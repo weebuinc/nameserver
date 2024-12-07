@@ -8,10 +8,10 @@ import { Endpoint as E, createDohClient } from 'api/services/doh';
 
 const endpoints: Array<E> = ['google', 'cloudflare'];
 function getSsl() {
-  const { SSL_CA, SSL_CERT, SSL_KEY, SSL_ENABLED } = process.env;
+  const { SSL_CA, SSL_CERT, SSL_KEY, SSL_ENABLED, SSL_PROTOCOL } = process.env;
   const enabled = /^true$/i.test(SSL_ENABLED);
   if (enabled) {
-    return { ca: SSL_CA, cert: SSL_CERT, key: SSL_KEY };
+    return { ca: SSL_CA, cert: SSL_CERT, key: SSL_KEY, secureProtocol: SSL_PROTOCOL };
   }
 }
 
