@@ -4,7 +4,8 @@ import { endpoints } from './consts';
 import { getAnswer, getEncodedPacket } from './utils';
 
 export function createDohClient(deps: Dependencies) {
-  const url = endpoints[deps.endpoint];
+  const { endpoint } = deps;
+  const url = endpoints[endpoint];
   const method = 'POST';
   const headers = { accept: 'application/dns-message', 'content-type': 'application/dns-message' };
 
@@ -21,5 +22,5 @@ export function createDohClient(deps: Dependencies) {
     return null;
   };
 
-  return { query };
+  return { endpoint, url, headers, query };
 }

@@ -23,27 +23,27 @@
   "license": "ISC",
   "dependencies": {
     "@weebuinc/web-kit": "0.1.2",
-    "better-sqlite3": "9.1.1",
+    "better-sqlite3": "9.6.0",
     "chalk": "4.1.2",
-    "dotenv": "16.0.3",
+    "dotenv": "16.4.7",
     "dns-packet": "5.6.1",
     "inquirer": "8.2.6",
     "node": "20.10.0",
     "table": "6.8.1",
-    "ts-node": "10.9.1",
-    "validator": "13.11.0"
+    "ts-node": "10.9.2",
+    "validator": "13.12.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "7.6.8",
+    "@types/better-sqlite3": "7.6.12",
     "@types/dns-packet": "5.6.4",
     "@types/inquirer": "8.2.6",
     "@types/jest": "29.5.11",
     "@types/node": "20.10.0",
-    "@types/validator": "13.11.7",
+    "@types/validator": "13.12.2",
     "jest": "29.7.0",
     "jest-junit": "16.0.0",
     "ts-jest": "29.1.1",
     "tsconfig-paths": "4.2.0",
-    "typescript": "5.0.4"
+    "typescript": "5.7.2"
   }
 }

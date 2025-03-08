@@ -19,7 +19,7 @@ export function createUdpServer(deps: Dependencies) {
     onQuery,
     onError
   } = deps;
-  const socket = createSocket('udp4');
+  const socket = createSocket({ type: 'udp4' });
 
   socket.on('error', onError);
   socket.on('listening', () => onBind(socket.address()));

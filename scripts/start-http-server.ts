@@ -6,12 +6,22 @@ import { serverRepo } from 'api/repos';
 import { createNameService, createUdpClient, createHttpServer } from 'api/services';
 import { Endpoint as E, createDohClient } from 'api/services/doh';
 
-const endpoints: Array<E> = ['google', 'cloudflare'];
+const { result: endpoints } = withCatch(() => {
+  const list = process.env.DOH_ENDPOINTS;
+  const filters: Array<E> = ['cloudflare', 'google'];
+  if (list) {
+    return list
+      .split(/\,|\;/)
+      .map(e => e as E)
+      .filter(e => filters.includes(e));
+  }
+  return [];
+});
 function getSsl() {
-  const { SSL_CA, SSL_CERT, SSL_KEY, SSL_ENABLED } = process.env;
+  const { SSL_CA, SSL_CERT, SSL_KEY, SSL_ENABLED, SSL_PROTOCOL } = process.env;
   const enabled = /^true$/i.test(SSL_ENABLED);
   if (enabled) {
-    return { ca: SSL_CA, cert: SSL_CERT, key: SSL_KEY };
+    return { ca: SSL_CA, cert: SSL_CERT, key: SSL_KEY, secureProtocol: SSL_PROTOCOL };
   }
 }
 
@@ -21,11 +31,16 @@ async function run() {
     active = false;
   });
 
+  const queryTimeout = parseInt(process.env.QUERY_TIMEOUT || '1000', 10);
   const ssl = getSsl();
   const ns = createNameService();
 
+  console.info('doh endpoints:', ...endpoints);
+
   const dohClients = endpoints.map(endpoint => createDohClient({ endpoint }));
-  const udpClients = serverRepo.list().map(s => createUdpClient({ address: s.address }));
+  const udpClients = serverRepo
+    .list()
+    .map(s => createUdpClient({ address: s.address, timeout: queryTimeout }));
 
   const server = createHttpServer({
     ssl,
@@ -46,7 +61,7 @@ async function run() {
           error && console.warn(error);
           if (result) {
             console.log(
-              `[doh] providing answer for ${info.address}:${info.port}\n`,
+              `[doh][${client.endpoint}][${client.url}] providing answer for ${info.address}:${info.port}\n`,
               inspect(result, false, 5, true)
             );
             return result;
@@ -61,7 +76,7 @@ async function run() {
           error && console.warn(error);
           if (result) {
             console.log(
-              `[udp] providing answer for ${info.address}:${info.port}\n`,
+              `[udp][${client.address}] providing answer for ${info.address}:${info.port}\n`,
               inspect(result, false, 5, true)
             );
             return result;
